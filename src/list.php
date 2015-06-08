@@ -43,9 +43,17 @@
             include('database.php');
             include('login_check.php');
             $user=$_SESSION['SESS_USER_NAME'];
-            $shopping_db=mysql_query("SELECT * FROM shopping WHERE user='$user'");
+            $mysqli=new mysqli($db_host,$db_user,$db_pass,$db_name);
+            if($mysqli->connect_errno){
+                printf("Connect failed: %s\n", $mysqli->connect_error);
+                exit();
+            }
+            $shopping_db=$mysqli->query("SELECT * FROM shopping WHERE user='$user'");
+            //$shopping_db = $mysqli->prepare("SELECT * FROM shopping WHERE user = ?");
+            //$shopping_db->bind_param("s",$user); 
+            //$shopping_db->execute();
             echo "<table>";
-            while($shopping_row=mysql_fetch_array($shopping_db)){
+            while($shopping_row=mysqli_fetch_array($shopping_db)){
                 echo "<tr><td class='norm'>".$shopping_row['item']."</td>";
                 echo "<form action='list_exec.php' method='post'>";
                 echo "<input type='hidden' name='d_item' value = '".$shopping_row['item']."'/>";

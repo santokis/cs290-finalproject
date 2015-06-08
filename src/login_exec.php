@@ -3,13 +3,19 @@
  	include('database.php');
  	$username=$_POST['username'];
 	$password=$_POST['password'];
-
-	$query="SELECT * FROM user WHERE username='$username' AND password='$password'";
-	$result=mysql_query($query);
+	$mysqli=new mysqli($db_host,$db_user,$db_pass,$db_name);
+	if($mysqli->connect_errno){
+	    printf("Connect failed: %s\n", $mysqli->connect_error);
+	    exit();
+	}
+	if($result=$mysqli->query("SELECT * FROM user WHERE username='$username' AND password='$password'")){
+	    //printf("Select returned %d rows.\n", $result->num_rows);
+	    $row_cnt=$result->num_rows;
+	}
 	if($result){
-		if(mysql_num_rows($result)>0){
+		if($row_cnt>0){
 			session_regenerate_id();
-			$user_database=mysql_fetch_assoc($result);
+			$user_database=$result->fetch_assoc();
 			$_SESSION['SESS_MEMBER_ID']=$user_database['id'];
 			$_SESSION['SESS_USER_NAME']=$user_database['username'];
 			session_write_close();

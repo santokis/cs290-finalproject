@@ -27,10 +27,15 @@
             session_start();
             include('database.php');
             $recipe=$_POST['recipe'];
-            $recipe_db=mysql_query("SELECT * FROM recipes WHERE recipe_name='$recipe'");
+            $mysqli=new mysqli($db_host,$db_user,$db_pass,$db_name);
+            if($mysqli->connect_errno){
+                printf("Connect failed: %s\n", $mysqli->connect_error);
+                exit();
+            }
+            $recipe_db=$mysqli->query("SELECT * FROM recipes WHERE recipe_name='$recipe'");
             echo "<h2>".$recipe."</h2>";
             echo "<table>";
-            while($details=mysql_fetch_array($recipe_db)){
+            while($details=mysqli_fetch_array($recipe_db,MYSQLI_BOTH)){
                 echo "<tr><th>Ingredients</th></tr>";
                 echo "<tr><td class='details'>".$details['ingredients']."</td></tr>";
                 echo "<tr></tr>";

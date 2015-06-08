@@ -3,9 +3,13 @@
  	include('database.php');
  	$user=$_SESSION['SESS_USER_NAME'];
  	$del_recipe=$_POST['del_recipe'];
-
+    $mysqli=new mysqli($db_host,$db_user,$db_pass,$db_name);
+    if($mysqli->connect_errno){
+        printf("Connect failed: %s\n", $mysqli->connect_error);
+        exit();
+    }
 	if(isset($del_recipe)){
- 		$delete=mysql_query("DELETE FROM recipes WHERE username='$user' AND recipe_name='$del_recipe'");
+        $delete=$mysqli->query("DELETE FROM recipes WHERE username='$user' AND recipe_name='$del_recipe'");
 		header("location: recipes.php");
 		exit();
  	}

@@ -31,13 +31,18 @@
             include('database.php');
             include('login_check.php');
             $user=$_SESSION['SESS_USER_NAME'];
-            $recipes_db=mysql_query("SELECT * FROM recipes");
+            $mysqli=new mysqli($db_host,$db_user,$db_pass,$db_name);
+            if ($mysqli->connect_errno) {
+                printf("Connect failed: %s\n", $mysqli->connect_error);
+                exit();
+            }
+            $recipes_db=$mysqli->query("SELECT * FROM recipes");
             echo "<table>";
             echo "<tr><th>Name</th>";
             echo "<th>Added by</th>";
             echo "<th></th>";
             echo "<th></th></tr>";
-            while($recipes_row=mysql_fetch_array($recipes_db)){
+            while($recipes_row=mysqli_fetch_array($recipes_db, MYSQLI_BOTH)){
                 echo "<tr><td class='norm'>".$recipes_row['recipe_name']."</td>";
                 echo "<td class='norm'>".$recipes_row['username']."</td>";
                 echo "<form action='recipe_details.php' method='post'>";

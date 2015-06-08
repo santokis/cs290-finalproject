@@ -3,8 +3,13 @@
     include('database.php');
     include('login_check.php');
     $id=$_SESSION['SESS_MEMBER_ID'];
-    $user_db=mysql_query("SELECT * FROM user WHERE id='$id'");
-    while($user_row=mysql_fetch_array($user_db)){
+    $mysqli=new mysqli($db_host,$db_user,$db_pass,$db_name);
+    if($mysqli->connect_errno){
+        printf("Connect failed: %s\n", $mysqli->connect_error);
+        exit();
+    }
+    $user_db=$mysqli->query("SELECT * FROM user WHERE id='$id'");
+    while($user_row=mysqli_fetch_array($user_db,MYSQLI_BOTH)){
         $user_username=$user_row['username'];
         $user_firstname=$user_row['firstname'];
         $user_lastname=$user_row['lastname'];
